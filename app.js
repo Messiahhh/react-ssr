@@ -6,9 +6,14 @@ const ssr = require('./src/server')
 
 const app = new koa()
 
+const initialState = {
+    name: 'akara',
+    age: 20,
+}
+
 router.get('/', (ctx, next) => { // 服务端渲染
-    const content = ssr()
-    ctx.body = content.trim()
+    const content = ssr(initialState)
+    ctx.body = content
 })
 
 router.get('/client', (ctx) => { // 客户端渲染，作为对比
