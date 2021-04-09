@@ -4,7 +4,7 @@ const koa = require('koa')
 const Router = require('koa-router')
 const router = new Router()
 const serve = require('koa-static')
-const renderToHTML = require('./renderToHTML')
+import renderToHTML from './renderToHTML'
 const app = new koa()
 
 const initialState = { // 初始state

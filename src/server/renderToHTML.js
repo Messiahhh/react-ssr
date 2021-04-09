@@ -12,8 +12,10 @@ import bluebird from 'bluebird'
 let fs = require('fs')
 fs = bluebird.promisifyAll(fs) 
 
-module.exports = async function renderToHTML(type, url, store) {
-    const template = await fs.readFileAsync(`${__dirname}/template/index.html`, 'utf8')
+
+
+export default async function renderToHTML(type, url, store) {
+    const template = await fs.readFileAsync((`./src/server/template/index.html`), 'utf8')
     const script = `
         <script src="/${type === 'server' ? 'client' : 'bundle'}.js"></script>
     `
