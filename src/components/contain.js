@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { loadData } from '../redux/action'
+import { loadData, setLists } from '../redux/action'
 
 export default function Contain() {
     const fetching = useSelector(state => state.isFetching)
     const lists = useSelector(state => state.lists)
-
     const dispatch = useDispatch()
+
     useEffect(() => {
-        // dispatch(loadData())
+        if (!lists) {
+            dispatch(loadData())
+        }
     }, [])
     return (
         <div>
+            i'm contain
             {
                 fetching && <h1>加载中...</h1>
             }

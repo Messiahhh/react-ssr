@@ -1,3 +1,4 @@
+import axios from 'axios'
 export const SET_FETCHING = 'SET_FETCHING'
 export const SET_LISTS = 'SET_LISTS'
 
@@ -14,10 +15,10 @@ export const setLists = (lists) => ({
 
 
 export const loadData = () => (dispatch) => {
-    console.log(dispatch(setFetching(true)));
-    // dispatch(setFetching(true))
-    return fetch('/getData')
-        .then(res => res.json())
-        .then(data => dispatch(setLists(data.lists)))
+    return axios.get('http://localhost:3000/getData')
+        .then(res => {
+            dispatch(setLists(res.data.lists))
+        })
+        .catch(err => console.log(err))
 }
 

@@ -1,18 +1,18 @@
 import React from 'react'
 import {
-    Link,
     Switch,
     Route,
 } from 'react-router-dom'
-import Contain from './contain'
 import { routes } from '../router/config'
 
 export default function App() {
+    const el = routes.map(route => {
+        return <Route  {...route}></Route> 
+    })
+
     return (
         <Switch>
-            {routes.map(route => (
-                <Route {...route} /> // 只渲染了空div？
-            ))}
+            {el}
         </Switch>
     )
 }

@@ -14,14 +14,19 @@ import {
 
 
 
+const initialState = { // 初始state
+    isFetching: false,
+    lists: [],
+}
 
 
-const store = configureStore()
-ReactDOM.render(
-    <Provider store={store}>
-        <Router>
-            <App />
-        </Router>
-    </Provider>,
-    document.querySelector('#root'),
-)
+const store = configureStore(initialState)
+console.log(store.getState());
+// ReactDOM.render(
+//     <Provider store={store}>
+//         <Router>
+//             <App />
+//         </Router>
+//     </Provider>,
+//     document.querySelector('#root'),
+// )

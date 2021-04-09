@@ -11,26 +11,34 @@ import {
 import bluebird from 'bluebird'
 const fs = bluebird.promisifyAll(require('fs'))
 
-module.exports = async function ssr(url, store) {
+module.exports = async function renderToHTML(type, url, store) {
     const template = await fs.readFileAsync(`${__dirname}/template/index.html`, 'utf8')
-
-    const content = renderToString(
-        <Provider store={store}>
-            <StaticRouter location={url}>
-                <App />
-            </StaticRouter>
-        </Provider>
-    )
-
-    const state = `
-        <script>
-            window.__STATE__ = ${JSON.stringify(store.getState())}
-        </script>
+    const script = `
+        <script src="/${type === 'server' ? 'client' : 'bundle'}.js"></script>
     `
+    if (type === 'client') { // 纯客户端渲染
+        return template
+        .replace('<!-- SCRIPT -->', script)
+    } else {
+        const content = renderToString(
+            <Provider store={store}>
+                <StaticRouter location={url}>
+                    <App />
+                </StaticRouter>
+            </Provider>
+        )
+        const state = `
+            <script>
+                window.__STATE__ = ${JSON.stringify(store.getState())}
+            </script>
+        `
+        return template
+        .replace(`<!-- CONTENT -->`, content)
+        .replace(`<!-- STATE -->`, state)
+        .replace(`<!-- SCRIPT -->`, script)
+    }
+    
 
-    return template
-    .replace(`<!-- CONTENT -->`, content)
-    .replace(`<!-- STATE -->`, state)
 }
 
 
