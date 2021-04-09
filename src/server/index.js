@@ -1,45 +1,49 @@
-import path from 'path'
-import React from 'react'
-import { renderToString } from 'react-dom/server'
-import App from '../components/app'
+import { routes } from '../router/config'
+import configureStore from '../redux/configureStore'
+const koa = require('koa')
+const Router = require('koa-router')
+const router = new Router()
+const serve = require('koa-static')
+const renderToHTML = require('./renderToHTML')
+const app = new koa()
 
-import { Provider } from 'react-redux'
-
-import {
-    StaticRouter,
-} from 'react-router-dom'
-import bluebird from 'bluebird'
-const fs = bluebird.promisifyAll(require('fs'))
-
-module.exports = async function renderToHTML(type, url, store) {
-    const template = await fs.readFileAsync(`${__dirname}/template/index.html`, 'utf8')
-    const script = `
-        <script src="/${type === 'server' ? 'client' : 'bundle'}.js"></script>
-    `
-    if (type === 'client') { // 纯客户端渲染
-        return template
-        .replace('<!-- SCRIPT -->', script)
-    } else {
-        const content = renderToString(
-            <Provider store={store}>
-                <StaticRouter location={url}>
-                    <App />
-                </StaticRouter>
-            </Provider>
-        )
-        const state = `
-            <script>
-                window.__STATE__ = ${JSON.stringify(store.getState())}
-            </script>
-        `
-        return template
-        .replace(`<!-- CONTENT -->`, content)
-        .replace(`<!-- STATE -->`, state)
-        .replace(`<!-- SCRIPT -->`, script)
-    }
-    
-
+const initialState = { // 初始state
+    isFetching: false,
+    lists: [],
 }
 
 
 
+
+router.get('/getData', (ctx) => {
+    ctx.body = {
+        lists: ['aaa', 'bbb', 'ccc'] 
+    }
+})
+
+router.get('/client', async (ctx) => { // 客户端渲染，作为对比
+    console.log('客户端渲染');
+    const content = await renderToHTML('client')
+    ctx.body = content
+})
+
+
+
+app.use(serve('dist'))
+app.use(router.routes())
+app.use(router.allowedMethods()) 
+
+app.use(async (ctx) => {
+    const store = configureStore(initialState) // 创建store
+    const promiseArr = []
+    routes.forEach(route => {
+        if (route.loadData) {
+            promiseArr.push(route.loadData(store)) // 服务端发请求初始化store数据，返回值是promise
+        }
+    })
+    await Promise.all(promiseArr) // 需要等待数据加载
+    const content = await renderToHTML('server', ctx.url, store) // 需要等待模板文件读取，并生成HTML
+    ctx.body = content
+})
+
+app.listen(3000, () => console.log('running'))

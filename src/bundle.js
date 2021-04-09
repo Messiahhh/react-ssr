@@ -21,12 +21,12 @@ const initialState = { // 初始state
 
 
 const store = configureStore(initialState)
-console.log(store.getState());
-// ReactDOM.render(
-//     <Provider store={store}>
-//         <Router>
-//             <App />
-//         </Router>
-//     </Provider>,
-//     document.querySelector('#root'),
-// )
+
+ReactDOM.render(
+    <Provider store={store}>
+        <Router>
+            <App />
+        </Router>
+    </Provider>,
+    document.querySelector('#root'),
+)

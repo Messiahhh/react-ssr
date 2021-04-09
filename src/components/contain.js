@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadData, setLists } from '../redux/action'
+import { Link } from 'react-router-dom'
 
 export default function Contain() {
     const fetching = useSelector(state => state.isFetching)
@@ -8,19 +9,17 @@ export default function Contain() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (!lists) {
+        // if (!lists) {
             dispatch(loadData())
-        }
+        // }
     }, [])
     return (
         <div>
-            i'm contain
             {
-                fetching && <h1>加载中...</h1>
+                fetching ? 
+                <h1>加载中...</h1> : lists.map((item, index) => <div key={index}>{item}</div>)
             }
-            {
-                lists.map((item, index) => <div key={index}>{item}</div>)
-            }
+            <Link to="/signup">注册</Link>
         </div>
     )
 }
