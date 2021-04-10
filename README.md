@@ -1,2 +1,4 @@
-### 服务端渲染教程
-> todo
+### React Server Side Render from scratch
+
+``` bash
+npm run dev
