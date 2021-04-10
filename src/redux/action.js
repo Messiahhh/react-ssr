@@ -15,6 +15,7 @@ export const setLists = (lists) => ({
 
 
 export const loadData = () => (dispatch) => {
+    dispatch(setFetching(true))
     return axios.get('http://localhost:3000/getData')
         .then(res => {
             dispatch(setLists(res.data.lists))

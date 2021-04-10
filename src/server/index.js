@@ -1,10 +1,10 @@
 import { routes } from '../router/config'
 import configureStore from '../redux/configureStore'
+import renderToHTML from './renderToHTML'
 const koa = require('koa')
 const Router = require('koa-router')
 const router = new Router()
 const serve = require('koa-static')
-import renderToHTML from './renderToHTML'
 const app = new koa()
 
 const initialState = { // 初始state
@@ -22,12 +22,9 @@ router.get('/getData', (ctx) => {
 })
 
 router.get('/client', async (ctx) => { // 客户端渲染，作为对比
-    console.log('客户端渲染');
     const content = await renderToHTML('client')
     ctx.body = content
 })
-
-
 
 app.use(serve('dist'))
 app.use(router.routes())

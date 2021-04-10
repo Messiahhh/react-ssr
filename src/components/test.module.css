@@ -1,0 +1,13 @@
+.Root {
+    color: red;
+}
+
+.Title {
+    background: pink;
+}
+
+.TestStyle {
+    text-align: center;
+    color: red;
+    display: flex;
+  }

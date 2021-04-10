@@ -9,9 +9,9 @@ export default function Contain() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        // if (!lists) {
+        if (!lists) {
             dispatch(loadData())
-        // }
+        }
     }, [])
     return (
         <div>
@@ -19,7 +19,6 @@ export default function Contain() {
                 fetching ? 
                 <h1>加载中...</h1> : lists.map((item, index) => <div key={index}>{item}</div>)
             }
-            <Link to="/signup">注册</Link>
         </div>
     )
 }

@@ -16,8 +16,17 @@ module.exports = {
                 loader: "babel-loader",
             },
             {
-                test: /\.css$/,
-                use: ["style-loader", "css-loader"]
+                test: /\.module\.css$/,
+                use: ["isomorphic-style-loader", {
+                    loader: "css-loader",
+                    options: {
+                        importLoaders: 1,
+                        // modules: true,
+                        esModule: false,
+                    }
+                },
+                "postcss-loader"
+            ],
             }
         ]
     },
